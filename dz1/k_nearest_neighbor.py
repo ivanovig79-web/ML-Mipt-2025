@@ -100,6 +100,7 @@ class KNearestNeighbor:
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             diff = X[i] - self.X_train
             dists[i, :] = np.sqrt(np.sum(diff**2, axis=1))
+
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -128,10 +129,10 @@ class KNearestNeighbor:
         #########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        X1 = np.sum(X**2, axis=1).reshape((num_test, 1))
-        X2 = np.sum(self.X_train**2, axis=1).reshape((1, num_train))
-        A = X @ self.X_train.T
-        dists = np.sqrt(X1 + X2 - 2 * A)
+        X_squared = np.sum(X**2, axis=1).reshape((num_test, 1))
+        X_train_squared = np.sum(self.X_train**2, axis=1).reshape((1, num_train))
+        cross_term = X @ self.X_train.T
+        dists = np.sqrt(X_squared + X_train_squared - 2 * cross_term)
         
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
@@ -166,6 +167,7 @@ class KNearestNeighbor:
 
             k_nearest_neighbors = np.argsort(dists[i])[:k]
             closest_y = self.y_train[k_nearest_neighbors]
+
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             #########################################################################
             # TODO:                                                                 #
@@ -175,8 +177,8 @@ class KNearestNeighbor:
             # label.                                                                #
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-            aa = np.bincount(closest_y)
-            y_pred[i] = np.argmax(aa)
+            counts = np.bincount(closest_y)
+            y_pred[i] = np.argmax(counts)
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         return y_pred
