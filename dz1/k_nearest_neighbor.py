@@ -126,7 +126,11 @@ class KNearestNeighbor:
         #########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        dists = np.sqrt(np.sum(X**2, axis=1).reshape((num_test, 1)) + np.sum(self.X_train**2, axis=1).reshape((1, num_train)) - 2 * (X @ self.X_train.T))
+        X_squared = np.sum(X**2, axis=1).reshape((num_test, 1))
+        X_train_squared = np.sum(self.X_train**2, axis=1).reshape((1, num_train))
+        cross_term = X @ self.X_train.T
+        dists = np.sqrt(X_squared + X_train_squared - 2 * cross_term)
+        
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
@@ -158,7 +162,8 @@ class KNearestNeighbor:
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-              closest_y = self.y_train[np.argsort(dists[i])[:k]]
+            k_nearest_neighbors = np.argsort(dists[i])[:k]
+            closest_y = self.y_train[k_nearest_neighbors]
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             #########################################################################
             # TODO:                                                                 #
