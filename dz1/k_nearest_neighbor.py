@@ -75,7 +75,8 @@ class KNearestNeighbor:
                 # not use a loop over dimension, nor use np.linalg.norm().          #
                 #####################################################################
                 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-                dists[i, j] = np.sqrt(np.sum((X[i] - self.X_train[j])**2))
+                diff = X[i] - self.X_train[j]
+                dists[i, j] = np.sqrt(np.sum(diff**2))
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -97,7 +98,8 @@ class KNearestNeighbor:
             # Do not use np.linalg.norm().                                        #
             #######################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-            dists[i, :] = np.sqrt(np.sum((X[i] - self.X_train)**2, axis=1))
+            diff = X[i] - self.X_train
+            dists[i, :] = np.sqrt(np.sum(diff**2, axis=1))
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -126,10 +128,10 @@ class KNearestNeighbor:
         #########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        X_squared = np.sum(X**2, axis=1).reshape((num_test, 1))
-        X_train_squared = np.sum(self.X_train**2, axis=1).reshape((1, num_train))
-        cross_term = X @ self.X_train.T
-        dists = np.sqrt(X_squared + X_train_squared - 2 * cross_term)
+        X1 = np.sum(X**2, axis=1).reshape((num_test, 1))
+        X2 = np.sum(self.X_train**2, axis=1).reshape((1, num_train))
+        A = X @ self.X_train.T
+        dists = np.sqrt(X1 + X2 - 2 * A)
         
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
@@ -173,7 +175,8 @@ class KNearestNeighbor:
             # label.                                                                #
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-            y_pred[i] = np.argmax(np.bincount(closest_y))
+            aa = np.bincount(closest_y)
+            y_pred[i] = np.argmax(aa)
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         return y_pred
